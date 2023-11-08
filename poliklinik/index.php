@@ -1,147 +1,127 @@
-<?php
-include_once("koneksi.php");
-?>
-
-<!DOCTYPE html>
-<html lang="en" >
-
-<head>
-  <meta charset="UTF-8">
-    <title>Sistem Informasi Poliklinik</title>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
-    <link rel='stylesheet' href='styleku.css'>
-	<!-- <link rel="icon" type="image/png" href="images/icons/aplogo.ico"/> -->
-	
-</head>
-<body translate="no">
-<body class="hero-anime">	
-<div class="container text text-left">    
-</br></div>
-	<div class="navigation-wrap bg-light start-header start-style">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<nav class="navbar navbar-expand-md navbar-light">
-					<div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      Sistem Informasi Poliklinik
-    </a>		
-						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							<span class="navbar-toggler-icon"></span>
-						</button>
-						
-						<div class="navbar-collapse" id="navbarSupportedContent">
-							<ul class="navbar-nav ml-auto py-4 py-md-0">
-							<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="index.php">Home</a>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Data Master</a>
-									<div class="dropdown-menu">
-										<a class="dropdown-item" href="dokter.php" target="scs_body">Dokter</a>
-										<a class="dropdown-item" href="pasien.php" target="scs_body">Pasien</a>
-                    <a class="dropdown-item" href="obat.php" target="scs_body">Obat</a>
-									</div>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="periksa.php" target="scs_body">Periksa</a>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="../login/logout.php">Logout</a>
-								</li>
-							</ul>
-						</div>
-					</nav>		
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="section full-height">
-			<div class="section">
-				<!-- <div class="container">
-					<div class="row">
-						<div class="col-12"> -->
-					<iframe name="scs_body" height="1000px" width="1350px" frameborder="0"></iframe>
-					<!-- <iframe name="scs_body" src=""style="width: 1400px; height: 300px;" frameborder="0"></iframe> -->
-					</div>		
-				</div>		
-			</div>
-			<!-- <div class="section mt-5">
-				<div class="container">
-					<div class="row">
-						<div class="col-12">
-							<div id="switch">
-								<div id="circle"></div>
-							</div>
-						</div>	
-					</div>		
-				</div>			
-			</div> -->
-		</div>
-	</div>
-	<div class="my-5 py-5">
-	</div>
-
-</body>
- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
-
-      <script id="rendered-js" >
-/* Please ❤ this if you like it! */
-
-
-(function ($) {"use strict";
-
-  $(function () {
-    var header = $(".start-style");
-    $(window).scroll(function () {
-      var scroll = $(window).scrollTop();
-
-      if (scroll >= 10) {
-        header.removeClass('start-style').addClass("scroll-on");
-      } else {
-        header.removeClass("scroll-on").addClass('start-style');
-      }
-    });
-  });
-
-  //Animation
-
-  $(document).ready(function () {
-    $('body.hero-anime').removeClass('hero-anime');
-  });
-
-  //Menu On Hover
-
-  $('body').on('mouseenter mouseleave', '.nav-item', function (e) {
-    if ($(window).width() > 750) {
-      var _d = $(e.target).closest('.nav-item');_d.addClass('show');
-      setTimeout(function () {
-        _d[_d.is(':hover') ? 'addClass' : 'removeClass']('show');
-      }, 1);
+<?php 
+ 
+include 'koneksi.php';
+ 
+error_reporting(0);
+ 
+session_start();
+ 
+if (isset($_SESSION['username'])) {
+    header("Location: ../dashboard");
+}
+ 
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+ 
+    $sql = "SELECT * FROM user WHERE username='$username' AND password='$password'";
+    $result = mysqli_query($koneksi, $sql);
+    if ($result->num_rows > 0) {
+        $row = mysqli_fetch_array($result);
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['password'] = $row['password'];
+        header("Location: ../dashboard");
+    } else {
+        echo "Gagal";
     }
-  });
+}
+ 
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login Poliklinik</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/polilogo.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+    </div>
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('images/bgrund.png');">
+			<div class="wrap-login100">
+				<form action="" method="POST" class="login100-form validate-form">
+					<span class="login100-form-logo">
+						<img src="images/udinus.png" witdh="auto" height="160px"> 
+					</span>
 
-  //Switch light/dark
+					<span class="login100-form-title p-b-27 p-t-27">
+						Poliklinik <br>Universitas <br>Dian Nuswantoro
+					</span>
 
-//   $("#switch").on('click', function () {
-//     if ($("body").hasClass("dark")) {
-//       $("body").removeClass("dark");
-//       $("#switch").removeClass("switched");
-//     } else
-//     {
-//       $("body").addClass("dark");
-//       $("#switch").addClass("switched");
-//     }
-//   });
+					<div class="wrap-input100 validate-input" data-validate = "Enter username">
+						<input class="input100" type="text" name="username" placeholder="Username">
+						<span class="focus-input100" data-placeholder="&#xf207;"></span>
+					</div>
 
-})(jQuery);
-//# sourceURL=pen.js
-    </script>
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<input class="input100" type="password" name="password" placeholder="Password">
+						<span class="focus-input100" data-placeholder="&#xf191;"></span>
+					</div>
 
-  
+					<!-- <div class="contact100-form-checkbox">
+						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+						<label class="label-checkbox100" for="ckb1">
+							Remember me
+						</label>
+					</div> -->
+
+					<div class="container-login100-form-btn">
+						<button name="submit" class="login100-form-btn">
+							Login
+						</button>
+					</div>
+
+					<div class="text-center p-t-13">
+						<a class="txt1" href="../register">
+							Belum Punya Akun ? Registrasi Sekarang!
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/daterangepicker/moment.min.js"></script>
+	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+
 </body>
-
 </html>
-<?php
